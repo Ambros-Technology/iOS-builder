@@ -36,12 +36,12 @@ jobs:
 
 
           ls -al
-          rm -rf $HOME/ambros-mobile
+          rm -rf $HOME/ambros_mobile
 
-          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILE_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros-mobile.git $HOME/ambros-mobile
+          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILE_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros_mobile.git $HOME/ambros_mobile
 
           
-          rm -rf $HOME/ambros-mobile-enviroment
+          rm -rf $HOME/ambros_mobiles_keys
 
-          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros-mobile-enviroment.git $HOME/ambros-mobile-enviroment
+          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros_mobiles_keys.git $HOME/ambros_mobiles_keys
           
