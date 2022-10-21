@@ -18,7 +18,8 @@ jobs:
     runs-on: macos-12
     environment: main
     env:
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      AMBROS_MOBILE_SSH_PRIVATE_KEY: ${{ secrets.AMBROS_MOBILE_SSH_PRIVATE_KEY }}
+      AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY: ${{ secrets.AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY }}
 
     steps:
       - name: Checkout
@@ -26,17 +27,20 @@ jobs:
 
       - name: Get configuration items
         run: |
-          echo $SSH_PRIVATE_KEY | base64 --decode > private.key
+          echo $AMBROS_MOBILE_SSH_PRIVATE_KEY | base64 --decode > AMBROS_MOBILE_SSH_PRIVATE_KEY.key
+          chmod 600 AMBROS_MOBILE_SSH_PRIVATE_KEY.key
 
-          chmod 600 private.key
-          pwd
+          echo $AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY | base64 --decode > AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key
+          chmod 600 AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key
+
+
           ls -al
           rm -rf $HOME/ambros-mobile
 
-          GIT_SSH_COMMAND='ssh -i private.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros-mobile.git $HOME/ambros-mobile
+          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILE_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros-mobile.git $HOME/ambros-mobile
 
           
           rm -rf $HOME/ambros-mobile-enviroment
 
-          GIT_SSH_COMMAND='ssh -i private.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros-mobile-enviroment.git $HOME/ambros-mobile-enviroment
+          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros-mobile-enviroment.git $HOME/ambros-mobile-enviroment
           
