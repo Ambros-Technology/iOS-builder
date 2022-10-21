@@ -29,6 +29,7 @@ jobs:
         run: |
           echo $AMBROS_MOBILE_SSH_PRIVATE_KEY | base64 --decode > AMBROS_MOBILE_SSH_PRIVATE_KEY.key
           chmod 600 AMBROS_MOBILE_SSH_PRIVATE_KEY.key
+          md5sum AMBROS_MOBILE_SSH_PRIVATE_KEY.key
 
           echo $AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY | base64 --decode > AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key
           chmod 600 AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key
