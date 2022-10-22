@@ -95,7 +95,8 @@ jobs:
           echo "--------------"
           ls -al
           echo "------"
-          ls -al ..
+          ls -al ../../
+          ls -al ../../ambros_mobile
 
       - name: Setup Java
         uses: actions/setup-java@v1.4.3
@@ -146,6 +147,6 @@ jobs:
 
         with:
           lane: dev
-          subdirectory: ../ambros_mobile/android
+          subdirectory: ../../ambros_mobile/android
 
 
