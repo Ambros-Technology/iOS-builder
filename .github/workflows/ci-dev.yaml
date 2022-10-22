@@ -96,7 +96,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
-        working-directory: ambros_mobile
 
       - name: Yarn setup
         run: yarn setup
@@ -104,7 +103,6 @@ jobs:
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
-        working-directory: ambros_mobile
         with:
           # ruby-version: 2.6
           bundler-cache: true
