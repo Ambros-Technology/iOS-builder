@@ -89,7 +89,7 @@ jobs:
           # 6. Copy file ios/fastlane/.env.ios to folder ios/fastlane of project ambros_mobile
           cp $CONFIG_PATH/ios/fastlane/.env.ios $HOME/ambros_mobile/ios/fastlane/.env.ios
 
-          ls -al /home/runner/ambros_mobile/
+          ls -al ../ambros_mobile/
 
       - name: Setup Java
         uses: actions/setup-java@v1.4.3
@@ -140,6 +140,6 @@ jobs:
 
         with:
           lane: dev
-          subdirectory: /home/runner/ambros_mobile/android
+          subdirectory: ../ambros_mobile/android
 
 
