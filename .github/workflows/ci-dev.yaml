@@ -105,6 +105,8 @@ jobs:
           ls -al ../../iOS-builder/
           echo "> ls -al /home/runner/"
           ls -al /home/runner/
+          file /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-dev.jks
+          md5sum /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-dev.jks
 
       - name: Setup Java
         uses: actions/setup-java@v1.4.3
