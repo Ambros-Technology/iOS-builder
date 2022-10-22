@@ -91,17 +91,20 @@ jobs:
 
       - name: Debug
         run: |
+          echo "pwd"
           pwd
-          echo "--------------"
+          echo "> ls -al"
           ls -al
           echo "> ls -al ../"
           ls -al ../
-          echo "------"
+          echo "> ls -al ../../"
           ls -al ../../
-          echo "------"
+          echo "> ls -al ../../../"
           ls -al ../../../                    
-          echo "------"
+          echo "> ls -al ../../iOS-builder/"
           ls -al ../../iOS-builder/
+          echo "> ls -al /home/runner/"
+          ls -al /home/runner/
 
       - name: Setup Java
         uses: actions/setup-java@v1.4.3
