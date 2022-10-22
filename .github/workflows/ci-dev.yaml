@@ -95,8 +95,11 @@ jobs:
           echo "--------------"
           ls -al
           echo "------"
+          ls -al ../
+          echo "------"
           ls -al ../../
-          ls -al ../../ambros_mobile
+          echo "------"
+          ls -al ../../../                    
 
       - name: Setup Java
         uses: actions/setup-java@v1.4.3
