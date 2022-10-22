@@ -94,12 +94,14 @@ jobs:
           pwd
           echo "--------------"
           ls -al
-          echo "------"
+          echo "> ls -al ../"
           ls -al ../
           echo "------"
           ls -al ../../
           echo "------"
           ls -al ../../../                    
+          echo "------"
+          ls -al ../../iOS-builder/
 
       - name: Setup Java
         uses: actions/setup-java@v1.4.3
