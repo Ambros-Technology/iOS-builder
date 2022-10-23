@@ -101,8 +101,8 @@ jobs:
           ls -al ../../
           echo "> ls -al ../../../"
           ls -al ../../../                    
-          echo "> ls -al ../../iOS-builder/"
-          ls -al ../../iOS-builder/
+          echo "> ls -al ../../mobile-builder/"
+          ls -al ../../mobile-builder/
           echo "> ls -al /home/runner/"
           ls -al /home/runner/
           file /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-dev.jks
