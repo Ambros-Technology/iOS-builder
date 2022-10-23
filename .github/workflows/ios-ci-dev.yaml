@@ -94,10 +94,10 @@ jobs:
           echo "ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/"''
           ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/
           file /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/BcmHunt_WildCard_Ad_Hoc.mobileprovision
-          echo "ls -al /home/runner/ambros_mobiles_keys/keys/ios-keys/"
-          ls -al /home/runner/ambros_mobiles_keys/keys/ios-keys/
-          echo "ls -al /home/runner/ambros_mobiles_keys/keys/ios-keys/certificate/"
-          ls -al /home/runner/ambros_mobiles_keys/keys/ios-keys/certificate/
+          echo "ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/"
+          ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/
+          echo "ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/"
+          ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/
 
       - name: Install brew
         run: |
@@ -144,9 +144,9 @@ jobs:
           AMBROS_PORTAL_PROD_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod.mobileprovision
           AMBROS_PORTAL_PROD_AD_HOC_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod_Ad_Hoc.mobileprovision 
           
-          DEV_CERT_PATH: /home/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Michael\ Nguyen\ -\ Cer\ -\ Dev.p12
+          DEV_CERT_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Michael\ Nguyen\ -\ Cer\ -\ Dev.p12
           DEV_CERT_PASSWORD: ${{ secrets.DEV_CERT_PASSWORD }}           
-          ADHOC_CERT_PATH: /home/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Ambros\ Technology\ -\ Cer\ -\ Ad\ Hoc.p12
+          ADHOC_CERT_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Ambros\ Technology\ -\ Cer\ -\ Ad\ Hoc.p12
           ADHOC_CERT_PASSWORD: ${{ secrets.ADHOC_CERT_PASSWORD }}   
 
         with:
