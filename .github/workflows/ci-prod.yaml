@@ -1,13 +1,13 @@
-name: Ambros Android CI Dev
+name: Ambros Android CI Prod
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 concurrency: 
-  group: android-build-dev
+  group: android-build-prod
   cancel-in-progress: true
 
 env:
@@ -44,7 +44,7 @@ jobs:
           ls -al
           rm -rf $HOME/ambros_mobile
 
-          AMBROX_MOBILE_BRANCH="develop"
+          AMBROX_MOBILE_BRANCH="main"
           GIT_SSH_COMMAND='ssh -i AMBROS_MOBILE_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone -b $AMBROX_MOBILE_BRANCH git@github.com:Ambros-Technology/ambros_mobile.git $HOME/ambros_mobile
 
           
@@ -106,8 +106,8 @@ jobs:
           ls -al ../../mobile-builder/
           echo "> ls -al /home/runner/"
           ls -al /home/runner/
-          file /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-dev.jks
-          md5sum /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-dev.jks
+          file /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-prod.jks
+          md5sum /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-prod.jks
 
       - name: Setup Java
         uses: actions/setup-java@v1.4.3
@@ -143,21 +143,25 @@ jobs:
         uses: maierj/fastlane-action@v2.3.0
         env:
 
-          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_DEV: ${{ secrets.AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_DEV }}
-          AMBROS_PORTAL_ANDROID_KEY_PATH_DEV: /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-dev.jks
-          AMBROS_PORTAL_ANDROID_STORE_PASSWORD_DEV: ${{ secrets.AMBROS_PORTAL_ANDROID_STORE_PASSWORD_DEV }}
-          AMBROS_PORTAL_ANDROID_KEY_PASSWORD_DEV: ${{ secrets.AMBROS_PORTAL_ANDROID_KEY_PASSWORD_DEV }}
-          APP_CENTER_API_TOKEN_DEV: ${{ secrets.APP_CENTER_API_TOKEN_DEV }}
+          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_DEV: "null"
+          AMBROS_PORTAL_ANDROID_KEY_PATH_DEV: "null"
+          AMBROS_PORTAL_ANDROID_STORE_PASSWORD_DEV: "null"
+          AMBROS_PORTAL_ANDROID_KEY_PASSWORD_DEV: "null"
+          
+          APP_CENTER_API_TOKEN_DEV: "null"
+
+          APP_CENTER_API_TOKEN_PROD: ${{ secrets.APP_CENTER_API_TOKEN_PROD }}
 
           AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_TEST: "null"
           AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_STAGING: "null"
-          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_PROD: "null"
-          AMBROS_PORTAL_ANDROID_KEY_PATH_PROD: "null"
-          AMBROS_PORTAL_ANDROID_STORE_PASSWORD_PROD: "null"
-          AMBROS_PORTAL_ANDROID_KEY_PASSWORD_PROD: "null"
+          
+          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_PROD: ${{ secrets.AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_PROD }}
+          AMBROS_PORTAL_ANDROID_KEY_PATH_PROD: "/home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-prod.jks"
+          AMBROS_PORTAL_ANDROID_STORE_PASSWORD_PROD: ${{ secrets.AMBROS_PORTAL_ANDROID_STORE_PASSWORD_PROD }}
+          AMBROS_PORTAL_ANDROID_KEY_PASSWORD_PROD: ${{ secrets.AMBROS_PORTAL_ANDROID_KEY_PASSWORD_PROD }}
 
         with:
-          lane: dev
+          lane: prod
           subdirectory: ../../../ambros_mobile/android
 
 
