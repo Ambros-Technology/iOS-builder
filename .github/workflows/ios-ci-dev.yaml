@@ -105,7 +105,7 @@ jobs:
 
       - name: Yarn setup
         run: yarn setup
-        working-directory: /home/runner/ambros_mobile
+        working-directory: /Users/runner/ambros_mobile
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -115,7 +115,7 @@ jobs:
 
       - name: Install Fastlane
         run: gem install fastlane
-        working-directory: /home/runner/ambros_mobile
+        working-directory: /Users/runner/ambros_mobile
 
       - name: Setup cache
         uses: actions/cache@v1
