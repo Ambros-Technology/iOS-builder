@@ -1,13 +1,13 @@
-name: Ambros Android CI Dev
+name: Ambros iOS CI Dev
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
 
 concurrency: 
-  group: android-build-dev
+  group: iOS-build-dev
   cancel-in-progress: true
 
 env:
@@ -15,7 +15,7 @@ env:
   
 jobs:
   clone-and-build:
-    runs-on: ubuntu-20.04
+    runs-on: macos-12
     environment: main
     env:
       AMBROS_MOBILE_SSH_PRIVATE_KEY: ${{ secrets.AMBROS_MOBILE_SSH_PRIVATE_KEY }}
@@ -35,7 +35,6 @@ jobs:
 
           echo $AMBROS_MOBILE_SSH_PRIVATE_KEY | base64 --decode > AMBROS_MOBILE_SSH_PRIVATE_KEY.key
           chmod 600 AMBROS_MOBILE_SSH_PRIVATE_KEY.key
-          head -1 AMBROS_MOBILE_SSH_PRIVATE_KEY.key
 
           echo $AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY | base64 --decode > AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key
           chmod 600 AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key
@@ -92,30 +91,17 @@ jobs:
 
       - name: Debug
         run: |
-          echo "pwd"
-          pwd
-          echo "> ls -al"
-          ls -al
-          echo "> ls -al ../"
-          ls -al ../
-          echo "> ls -al ../../"
-          ls -al ../../
-          echo "> ls -al ../../../"
-          ls -al ../../../                    
-          echo "> ls -al ../../mobile-builder/"
-          ls -al ../../mobile-builder/
-          echo "> ls -al /home/runner/"
-          ls -al /home/runner/
-          file /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-dev.jks
-          md5sum /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-dev.jks
+          ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/
+          file /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/BcmHunt_WildCard_Ad_Hoc.mobileprovision
 
-      - name: Setup Java
-        uses: actions/setup-java@v1.4.3
-        with:
-          java-version: 11 
+      - name: Install brew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+      - name: Install Node and Watchman
+        run: |
+          brew install node
+          brew install watchman
 
       - name: Yarn setup
         run: yarn setup
@@ -135,31 +121,28 @@ jobs:
         uses: actions/cache@v1
         with:
           path: Pods
-          key: ${{ runner.os }}-android-build-cache
+          key: ${{ runner.os }}-ios-build-cache
           restore-keys: |
-            ${{ runner.os }}-android-build-cache
+            ${{ runner.os }}-ios-build-cache
 
       - name: Fastlane action
         uses: maierj/fastlane-action@v2.3.0
         env:
 
-          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_DEV: ${{ secrets.AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_DEV }}
-          AMBROS_PORTAL_ANDROID_KEY_PATH_DEV: /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-dev.jks
-          AMBROS_PORTAL_ANDROID_STORE_PASSWORD_DEV: ${{ secrets.AMBROS_PORTAL_ANDROID_STORE_PASSWORD_DEV }}
-          AMBROS_PORTAL_ANDROID_KEY_PASSWORD_DEV: ${{ secrets.AMBROS_PORTAL_ANDROID_KEY_PASSWORD_DEV }}
-          APP_CENTER_API_TOKEN_DEV: ${{ secrets.APP_CENTER_API_TOKEN_DEV }}
-
-          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_TEST: "null"
-          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_STAGING: "null"
-          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_PROD: "null"
-          AMBROS_PORTAL_ANDROID_KEY_PATH_PROD: "null"
-          AMBROS_PORTAL_ANDROID_STORE_PASSWORD_PROD: "null"
-          AMBROS_PORTAL_ANDROID_KEY_PASSWORD_PROD: "null"
+          APP_CENTER_API_TOKEN_DEV: ${{ secrets.IOS_APP_CENTER_API_TOKEN_DEV }}
+          CODE_PUSH_KEY_DEV: ${{ secrets.IOS_CODE_PUSH_KEY_DEV }}
+          SENTRY_INTERNAL_DSN: ${{ secrets.IOS_SENTRY_INTERNAL_DSN }}
+          BCMHUNT_WILDCARD_AD_HOC_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/BcmHunt_WildCard_Ad_Hoc.mobileprovision
+          AMBROS_PORTAL_DEV_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev.mobileprovision
+          BCMHUNT_WILDCARD_DEV_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/BcmHunt_WildCard_Dev.mobileprovision
+          AMBROS_PORTAL_DEV_AD_HOC_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev_Ad_Hoc.mobileprovision
 
         with:
           lane: dev
-          subdirectory: ../../../ambros_mobile/android
+          subdirectory: ../../../ambros_mobile/ios
 
-
-
-
+      - name: Debug | cat /Users/runner/Library/Logs/gym/Ambros Dev-Dev.log file
+        if: failure()
+        shell: bash
+        run: |
+          cat /Users/runner/Library/Logs/gym/Ambros\ Dev-Dev.log

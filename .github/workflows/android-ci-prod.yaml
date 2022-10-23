@@ -1,0 +1,168 @@
+name: Ambros Android CI Prod
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency: 
+  group: android-build-prod
+  cancel-in-progress: true
+
+env:
+  LANG: en_US.UTF-8
+  
+jobs:
+  clone-and-build:
+    runs-on: ubuntu-20.04
+    environment: main
+    env:
+      AMBROS_MOBILE_SSH_PRIVATE_KEY: ${{ secrets.AMBROS_MOBILE_SSH_PRIVATE_KEY }}
+      AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY: ${{ secrets.AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get configuration items
+        env:
+          MOBILE_KEYS_SSH_PRIVATEKEY: ${{ secrets.MOBILE_KEYS_SSH_PRIVATEKEY }}
+          AMBROS_MOBILE_KEY_PASSPHRASE: ${{ secrets.AMBROS_MOBILE_KEY_PASSPHRASE }}
+
+        run: |
+          echo "Home: " $HOME
+
+          echo $AMBROS_MOBILE_SSH_PRIVATE_KEY | base64 --decode > AMBROS_MOBILE_SSH_PRIVATE_KEY.key
+          chmod 600 AMBROS_MOBILE_SSH_PRIVATE_KEY.key
+
+          echo $AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY | base64 --decode > AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key
+          chmod 600 AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key
+
+
+          ls -al
+          rm -rf $HOME/ambros_mobile
+
+          AMBROX_MOBILE_BRANCH="main"
+          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILE_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone -b $AMBROX_MOBILE_BRANCH git@github.com:Ambros-Technology/ambros_mobile.git $HOME/ambros_mobile
+
+          
+          rm -rf $HOME/ambros_mobiles_keys
+
+          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILES_KEYS_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros_mobiles_keys.git $HOME/ambros_mobiles_keys
+          
+          CONFIG_PATH=$HOME/ambros_mobiles_keys
+          
+          echo $CONFIG_PATH
+
+          echo "Using gpg to decrypt sensitive files now"
+          gpg --quiet --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/sentry.android.properties.gpg > $CONFIG_PATH/sentry.android.properties
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/sentry.ios.properties.gpg > $CONFIG_PATH/sentry.ios.properties
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/.env.android.gpg > $CONFIG_PATH/.env.android 
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/.env.ios.gpg > $CONFIG_PATH/.env.ios
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/ios/code-push.xcconfig.gpg > $CONFIG_PATH/ios/code-push.xcconfig
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/ios/fastlane/.env.ios.gpg > $CONFIG_PATH/ios/fastlane/.env.ios
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/android/fastlane/.env.android.gpg > $CONFIG_PATH/android/fastlane/.env.android 
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/android-keys/ambros-portal-dev.jks.gpg > $CONFIG_PATH/keys/android-keys/ambros-portal-dev.jks
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/android-keys/ambros-portal-prod.jks.gpg > $CONFIG_PATH/keys/android-keys/ambros-portal-prod.jks
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/certificate/Ambros\ Technology\ -\ Cer\ -\ Ad\ Hoc.p12.gpg > $CONFIG_PATH/keys/ios-keys/certificate/Ambros\ Technology\ -\ Cer\ -\ Ad\ Hoc.p12
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/certificate/Michael\ Nguyen\ -\ Cer\ -\ Dev.p12.gpg > $CONFIG_PATH/keys/ios-keys/certificate/Michael\ Nguyen\ -\ Cer\ -\ Dev.p12
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev.mobileprovision.gpg > $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev.mobileprovision 
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev_Ad_Hoc.mobileprovision.gpg > $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev_Ad_Hoc.mobileprovision 
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod.mobileprovision.gpg > $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod.mobileprovision
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod_Ad_Hoc.mobileprovision.gpg > $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod_Ad_Hoc.mobileprovision 
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/provisioning-profile/BcmHunt_WildCard_Ad_Hoc.mobileprovision.gpg > $CONFIG_PATH/keys/ios-keys/provisioning-profile/BcmHunt_WildCard_Ad_Hoc.mobileprovision
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/provisioning-profile/BcmHunt_WildCard_Dev.mobileprovision.gpg > $CONFIG_PATH/keys/ios-keys/provisioning-profile/BcmHunt_WildCard_Dev.mobileprovision
+
+          # 3. Copy file .env.android, .env.ios, sentry.android.properties, sentry.ios.properties to folder of  project ambros_mobile
+          cp $CONFIG_PATH/sentry.android.properties $HOME/ambros_mobile/sentry.android.properties
+          cp $CONFIG_PATH/sentry.ios.properties $HOME/ambros_mobile/sentry.ios.properties
+          cp $CONFIG_PATH/.env.android $HOME/ambros_mobile/.env.android
+          cp $CONFIG_PATH/.env.ios $HOME/ambros_mobile/.env.ios
+
+          # 4. Copy file android/fastlane/.env.android to folder android/fastlane of project ambros_mobile
+          cp $CONFIG_PATH/android/fastlane/.env.android $HOME/ambros_mobile/android/fastlane/.env.android
+
+          # 5. Copy file ios/code-push.xcconfig to folder ios/ of project ambros_mobile
+          cp $CONFIG_PATH/ios/code-push.xcconfig $HOME/ambros_mobile/ios/code-push.xcconfig
+          
+          # 6. Copy file ios/fastlane/.env.ios to folder ios/fastlane of project ambros_mobile
+          cp $CONFIG_PATH/ios/fastlane/.env.ios $HOME/ambros_mobile/ios/fastlane/.env.ios
+
+      - name: Debug
+        run: |
+          echo "pwd"
+          pwd
+          echo "> ls -al"
+          ls -al
+          echo "> ls -al ../"
+          ls -al ../
+          echo "> ls -al ../../"
+          ls -al ../../
+          echo "> ls -al ../../../"
+          ls -al ../../../                    
+          echo "> ls -al ../../mobile-builder/"
+          ls -al ../../mobile-builder/
+          echo "> ls -al /home/runner/"
+          ls -al /home/runner/
+          file /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-prod.jks
+          md5sum /home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-prod.jks
+
+      - name: Setup Java
+        uses: actions/setup-java@v1.4.3
+        with:
+          java-version: 11 
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Yarn setup
+        run: yarn setup
+        working-directory: /home/runner/ambros_mobile
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+
+      - name: Install Fastlane
+        run: gem install fastlane
+        working-directory: /home/runner/ambros_mobile
+
+      - name: Setup cache
+        uses: actions/cache@v1
+        with:
+          path: Pods
+          key: ${{ runner.os }}-android-build-cache
+          restore-keys: |
+            ${{ runner.os }}-android-build-cache
+
+      - name: Fastlane action
+        uses: maierj/fastlane-action@v2.3.0
+        env:
+
+          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_DEV: "null"
+          AMBROS_PORTAL_ANDROID_KEY_PATH_DEV: "null"
+          AMBROS_PORTAL_ANDROID_STORE_PASSWORD_DEV: "null"
+          AMBROS_PORTAL_ANDROID_KEY_PASSWORD_DEV: "null"
+          
+          APP_CENTER_API_TOKEN_DEV: "null"
+
+          APP_CENTER_API_TOKEN_PROD: ${{ secrets.APP_CENTER_API_TOKEN_PROD }}
+
+          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_TEST: "null"
+          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_STAGING: "null"
+          
+          AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_PROD: ${{ secrets.AMBROS_PORTAL_ANDROID_CODE_PUSH_KEY_PROD }}
+          AMBROS_PORTAL_ANDROID_KEY_PATH_PROD: "/home/runner/ambros_mobiles_keys/keys/android-keys/ambros-portal-prod.jks"
+          AMBROS_PORTAL_ANDROID_STORE_PASSWORD_PROD: ${{ secrets.AMBROS_PORTAL_ANDROID_STORE_PASSWORD_PROD }}
+          AMBROS_PORTAL_ANDROID_KEY_PASSWORD_PROD: ${{ secrets.AMBROS_PORTAL_ANDROID_KEY_PASSWORD_PROD }}
+
+        with:
+          lane: prod
+          subdirectory: ../../../ambros_mobile/android
+
+
+
+
