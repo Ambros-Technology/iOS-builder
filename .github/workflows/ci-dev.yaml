@@ -7,7 +7,7 @@ on:
       - main
 
 concurrency: 
-  group: ios-build-dev
+  group: android-build-dev
   cancel-in-progress: true
 
 env:
@@ -44,7 +44,8 @@ jobs:
           ls -al
           rm -rf $HOME/ambros_mobile
 
-          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILE_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone git@github.com:Ambros-Technology/ambros_mobile.git $HOME/ambros_mobile
+          AMBROX_MOBILE_BRANCH="develop"
+          GIT_SSH_COMMAND='ssh -i AMBROS_MOBILE_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone -b $AMBROX_MOBILE_BRANCH git@github.com:Ambros-Technology/ambros_mobile.git $HOME/ambros_mobile
 
           
           rm -rf $HOME/ambros_mobiles_keys
