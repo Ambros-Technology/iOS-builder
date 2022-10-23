@@ -152,7 +152,7 @@ jobs:
           ADHOC_CERT_PASSWORD: ${{ secrets.ADHOC_CERT_PASSWORD }}   
 
         with:
-          lane: dev
+          lane: dev_ci
           subdirectory: ../../../ambros_mobile/ios
 
       - name: Debug | cat /Users/runner/Library/Logs/gym/Ambros Dev-Dev.log file
