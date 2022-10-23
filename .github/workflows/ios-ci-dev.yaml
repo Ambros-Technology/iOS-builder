@@ -43,7 +43,7 @@ jobs:
           ls -al
           rm -rf $HOME/ambros_mobile
 
-          AMBROX_MOBILE_BRANCH="develop"
+          AMBROX_MOBILE_BRANCH="feat/updated-develop-fastlane"
           GIT_SSH_COMMAND='ssh -i AMBROS_MOBILE_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone -b $AMBROX_MOBILE_BRANCH git@github.com:Ambros-Technology/ambros_mobile.git $HOME/ambros_mobile
 
           
@@ -136,7 +136,9 @@ jobs:
           AMBROS_PORTAL_DEV_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev.mobileprovision
           BCMHUNT_WILDCARD_DEV_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/BcmHunt_WildCard_Dev.mobileprovision
           AMBROS_PORTAL_DEV_AD_HOC_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev_Ad_Hoc.mobileprovision
-
+          AMBROS_PORTAL_PROD_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod.mobileprovision
+          AMBROS_PORTAL_PROD_AD_HOC_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod_Ad_Hoc.mobileprovision 
+          
         with:
           lane: dev
           subdirectory: ../../../ambros_mobile/ios
