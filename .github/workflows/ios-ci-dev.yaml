@@ -65,8 +65,8 @@ jobs:
           gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/android/fastlane/.env.android.gpg > $CONFIG_PATH/android/fastlane/.env.android 
           gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/android-keys/ambros-portal-dev.jks.gpg > $CONFIG_PATH/keys/android-keys/ambros-portal-dev.jks
           gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/android-keys/ambros-portal-prod.jks.gpg > $CONFIG_PATH/keys/android-keys/ambros-portal-prod.jks
-          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/certificate/Ambros\ Technology\ -\ Cer\ -\ Ad\ Hoc.p12.gpg > $CONFIG_PATH/keys/ios-keys/certificate/Ambros\ Technology\ -\ Cer\ -\ Ad\ Hoc.p12
-          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/certificate/Michael\ Nguyen\ -\ Cer\ -\ Dev.p12.gpg > $CONFIG_PATH/keys/ios-keys/certificate/Michael\ Nguyen\ -\ Cer\ -\ Dev.p12
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/certificate/Ambros\ Technology\ -\ Cer\ -\ Ad\ Hoc.p12.gpg > $CONFIG_PATH/keys/ios-keys/certificate/Ambros-Technology-Cer-Ad-Hoc.p12
+          gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/certificate/Michael\ Nguyen\ -\ Cer\ -\ Dev.p12.gpg > $CONFIG_PATH/keys/ios-keys/certificate/Michael-Nguyen-Cer-Dev.p12
           gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev.mobileprovision.gpg > $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev.mobileprovision 
           gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev_Ad_Hoc.mobileprovision.gpg > $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Dev_Ad_Hoc.mobileprovision 
           gpg --batch --batch --yes --decrypt --passphrase=$AMBROS_MOBILE_KEY_PASSPHRASE $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod.mobileprovision.gpg > $CONFIG_PATH/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod.mobileprovision
@@ -98,6 +98,8 @@ jobs:
           ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/
           echo "ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/"
           ls -al /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/
+          file /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Michael-Nguyen-Cer-Dev.p12
+          file /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Ambros-Technology-Cer-Ad-Hoc.p12
 
       - name: Install brew
         run: |
@@ -144,9 +146,9 @@ jobs:
           AMBROS_PORTAL_PROD_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod.mobileprovision
           AMBROS_PORTAL_PROD_AD_HOC_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/provisioning-profile/Ambros_Portal_Prod_Ad_Hoc.mobileprovision 
           
-          DEV_CERT_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Michael\ Nguyen\ -\ Cer\ -\ Dev.p12
+          DEV_CERT_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Michael-Nguyen-Cer-Dev.p12
           DEV_CERT_PASSWORD: ${{ secrets.DEV_CERT_PASSWORD }}           
-          ADHOC_CERT_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Ambros\ Technology\ -\ Cer\ -\ Ad\ Hoc.p12
+          ADHOC_CERT_PATH: /Users/runner/ambros_mobiles_keys/keys/ios-keys/certificate/Ambros-Technology-Cer-Ad-Hoc.p12
           ADHOC_CERT_PASSWORD: ${{ secrets.ADHOC_CERT_PASSWORD }}   
 
         with:
