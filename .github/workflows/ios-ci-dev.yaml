@@ -2,9 +2,9 @@ name: Ambros iOS CI Dev
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 concurrency: 
   group: iOS-build-dev
