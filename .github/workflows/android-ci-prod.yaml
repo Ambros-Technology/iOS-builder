@@ -2,6 +2,8 @@ name: Ambros Android CI Prod
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [android_ci_prod]
   # push:
   #   branches:
   #     - main
