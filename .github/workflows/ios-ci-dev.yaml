@@ -2,6 +2,8 @@ name: Ambros iOS CI Dev
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [ios_ci_dev]
   # push:
   #   branches:
   #     - main
