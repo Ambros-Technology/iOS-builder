@@ -45,9 +45,9 @@ jobs:
           ls -al
           rm -rf $HOME/ambros_mobile
 
-          AMBROX_MOBILE_BRANCH="feat/updated-develop-fastlane"
-          # TODO: change this branch to develop
-
+          AMBROX_MOBILE_BRANCH="develop" 
+          # "feat/updated-develop-fastlane"
+          
           GIT_SSH_COMMAND='ssh -i AMBROS_MOBILE_SSH_PRIVATE_KEY.key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no' git clone -b $AMBROX_MOBILE_BRANCH git@github.com:Ambros-Technology/ambros_mobile.git $HOME/ambros_mobile
 
           
